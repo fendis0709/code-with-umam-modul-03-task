@@ -2,8 +2,8 @@ package handler
 
 import (
 	"encoding/json"
-	"fendi/modul-02-task/service"
-	"fendi/modul-02-task/transport"
+	"fendi/modul-03-task/service"
+	"fendi/modul-03-task/transport"
 	"fmt"
 	"net/http"
 )
@@ -127,7 +127,7 @@ func (h *CategoryHandler) UpdateCategory(w http.ResponseWriter, r *http.Request)
 	if err != nil {
 		if err.Error() == "category not found" {
 			fmt.Print("handler.category.UpdateCategory() Error: category not found")
-			http.Error(w, "Not Found", http.StatusNotFound)
+			http.Error(w, "Bad Request: Category not found", http.StatusBadRequest)
 			return
 		}
 

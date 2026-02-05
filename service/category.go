@@ -2,10 +2,10 @@ package service
 
 import (
 	"context"
-	"fendi/modul-02-task/helper"
-	"fendi/modul-02-task/model"
-	"fendi/modul-02-task/repository"
-	"fendi/modul-02-task/transport"
+	"fendi/modul-03-task/helper"
+	"fendi/modul-03-task/model"
+	"fendi/modul-03-task/repository"
+	"fendi/modul-03-task/transport"
 	"fmt"
 )
 
@@ -17,6 +17,7 @@ func NewCategoryService(repo *repository.CategoryRepository) *CategoryService {
 	return &CategoryService{repo: repo}
 }
 
+// GetAllCategory retrieves all categories with an optional keyword filter.
 func (s *CategoryService) GetAllCategory(ctx context.Context, keyword string) ([]transport.CategoryItemResponse, error) {
 	categories, err := s.repo.GetAllCategory(ctx, keyword)
 	if err != nil {
@@ -32,6 +33,7 @@ func (s *CategoryService) GetAllCategory(ctx context.Context, keyword string) ([
 	return categoriesResponse, nil
 }
 
+// GetCategoryByUUID retrieves a category by its UUID.
 func (s *CategoryService) GetCategoryByUUID(ctx context.Context, uuid string) (transport.CategoryItemResponse, error) {
 	category, err := s.repo.GetCategoryByUUID(ctx, uuid)
 	if err != nil {
@@ -51,6 +53,7 @@ func (s *CategoryService) GetCategoryByUUID(ctx context.Context, uuid string) (t
 	return categoryResponse, nil
 }
 
+// transformCategory transforms a slice of model.Category to a slice of transport.CategoryItemResponse.
 func transformCategory(c []model.Category) []transport.CategoryItemResponse {
 	var categoriesResponse []transport.CategoryItemResponse
 	for _, category := range c {
@@ -65,6 +68,7 @@ func transformCategory(c []model.Category) []transport.CategoryItemResponse {
 	return categoriesResponse
 }
 
+// CreateCategory creates a new category.
 func (s *CategoryService) CreateCategory(ctx context.Context, req transport.CategoryRequest) (transport.CategoryItemResponse, error) {
 	randomUUID := helper.GenerateUUID()
 
@@ -89,6 +93,7 @@ func (s *CategoryService) CreateCategory(ctx context.Context, req transport.Cate
 	return categoryResponse, nil
 }
 
+// UpdateCategory updates an existing category.
 func (s *CategoryService) UpdateCategory(ctx context.Context, id string, req transport.CategoryRequest) (transport.CategoryItemResponse, error) {
 	category, err := s.repo.GetCategoryByUUID(ctx, id)
 	if err != nil {
@@ -121,6 +126,7 @@ func (s *CategoryService) UpdateCategory(ctx context.Context, id string, req tra
 	return categoryResponse, nil
 }
 
+// DeleteCategory deletes a category by its UUID.
 func (s *CategoryService) DeleteCategory(ctx context.Context, id string) error {
 	err := s.repo.DeleteCategory(ctx, id)
 	if err != nil {

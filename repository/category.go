@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fendi/modul-02-task/helper"
-	"fendi/modul-02-task/model"
+	"fendi/modul-03-task/helper"
+	"fendi/modul-03-task/model"
 	"fmt"
 )
 

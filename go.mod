@@ -1,4 +1,4 @@
-module fendi/modul-02-task
+module fendi/modul-03-task
 
 go 1.25.0
 

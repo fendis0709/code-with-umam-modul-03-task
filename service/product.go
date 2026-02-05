@@ -2,10 +2,10 @@ package service
 
 import (
 	"context"
-	"fendi/modul-02-task/helper"
-	"fendi/modul-02-task/model"
-	"fendi/modul-02-task/repository"
-	"fendi/modul-02-task/transport"
+	"fendi/modul-03-task/helper"
+	"fendi/modul-03-task/model"
+	"fendi/modul-03-task/repository"
+	"fendi/modul-03-task/transport"
 	"fmt"
 )
 
@@ -21,6 +21,7 @@ func NewProductService(repo *repository.ProductRepository, categoryRepo *reposit
 	}
 }
 
+// GetAllProduct retrieves all products with an optional keyword filter.
 func (s *ProductService) GetAllProduct(ctx context.Context, keyword string) ([]transport.ProductItemResponse, error) {
 	products, err := s.repo.GetAllProduct(ctx, keyword)
 	if err != nil {
@@ -36,6 +37,7 @@ func (s *ProductService) GetAllProduct(ctx context.Context, keyword string) ([]t
 	return productsResponse, nil
 }
 
+// GetProductByUUID retrieves a product by its UUID.
 func (s *ProductService) GetProductByUUID(ctx context.Context, uuid string) (transport.ProductItemResponse, error) {
 	product, err := s.repo.GetProductByUUID(ctx, uuid)
 	if err != nil {
@@ -66,6 +68,7 @@ func (s *ProductService) GetProductByUUID(ctx context.Context, uuid string) (tra
 	return productResponse, nil
 }
 
+// transformProduct transforms a slice of model.Product to a slice of transport.ProductItemResponse.
 func transformProduct(p []model.Product) []transport.ProductItemResponse {
 	var productsResponse []transport.ProductItemResponse
 	for _, product := range p {
@@ -91,6 +94,7 @@ func transformProduct(p []model.Product) []transport.ProductItemResponse {
 	return productsResponse
 }
 
+// CreateProduct creates a new product.
 func (s *ProductService) CreateProduct(ctx context.Context, req transport.ProductRequest) (transport.ProductItemResponse, error) {
 	randUUID := helper.GenerateUUID()
 	randSKU := helper.GenerateSKU()
@@ -159,6 +163,7 @@ func (s *ProductService) CreateProduct(ctx context.Context, req transport.Produc
 	return productResponse, nil
 }
 
+// UpdateProduct updates an existing product.
 func (s *ProductService) UpdateProduct(ctx context.Context, id string, req transport.ProductRequest) (transport.ProductItemResponse, error) {
 	product, err := s.repo.GetProductByUUID(ctx, id)
 	if err != nil {
@@ -236,6 +241,7 @@ func (s *ProductService) UpdateProduct(ctx context.Context, id string, req trans
 	return productResponse, nil
 }
 
+// DeleteProduct deletes a product by its UUID.
 func (s *ProductService) DeleteProduct(ctx context.Context, id string) error {
 	err := s.repo.DeleteProduct(ctx, id)
 	if err != nil {

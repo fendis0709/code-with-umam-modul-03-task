@@ -3,9 +3,11 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"fendi/modul-02-task/helper"
-	"fendi/modul-02-task/model"
+	"fendi/modul-03-task/helper"
+	"fendi/modul-03-task/model"
 	"fmt"
+
+	"github.com/lib/pq"
 )
 
 type ProductRepository struct {
@@ -123,6 +125,68 @@ func (r *ProductRepository) GetProductByUUID(ctx context.Context, uuid string) (
 	}
 
 	return &p, nil
+}
+
+func (r *ProductRepository) GetProductBySKUs(ctx context.Context, sku []string) ([]model.Product, error) {
+	query :=
+		`SELECT 
+			p.id, p.uuid, p.sku, p.name, p.stock, p.price,
+			c.id, c.uuid, c.name, c.description
+		FROM products p
+		LEFT JOIN categories c ON p.category_id = c.id AND c.deleted_at IS NULL
+		WHERE 
+			p.deleted_at IS NULL`
+
+	var args []interface{}
+	if len(sku) > 0 {
+		query += " AND p.sku = ANY($1)"
+		args = append(args, pq.Array(sku))
+	}
+
+	query += " ORDER BY p.id ASC"
+
+	rows, err := r.db.QueryContext(ctx, query, args...)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return []model.Product{}, nil
+		}
+		fmt.Println("repository.product.GetProductBySKUs() Query Error: ", err.Error())
+		return nil, err
+	}
+	defer rows.Close()
+
+	products := make([]model.Product, 0)
+	for rows.Next() {
+		var p model.Product
+		var categoryDBID sql.NullInt64
+		var categoryUUID, categoryName sql.NullString
+		var categoryDesc sql.NullString
+
+		err := rows.Scan(
+			&p.ID, &p.UUID, &p.SKU, &p.Name, &p.Stock, &p.Price,
+			&categoryDBID, &categoryUUID, &categoryName, &categoryDesc,
+		)
+		if err != nil {
+			fmt.Println("repository.product.GetProductBySKUs() Scan Error: ", err.Error())
+			return nil, err
+		}
+
+		if categoryUUID.Valid && categoryName.Valid {
+			category := &model.Category{
+				ID:   categoryDBID.Int64,
+				UUID: categoryUUID.String,
+				Name: categoryName.String,
+			}
+			if categoryDesc.Valid {
+				category.Description = &categoryDesc.String
+			}
+			p.Category = category
+		}
+
+		products = append(products, p)
+	}
+
+	return products, nil
 }
 
 func (r *ProductRepository) CreateProduct(ctx context.Context, p model.Product) error {

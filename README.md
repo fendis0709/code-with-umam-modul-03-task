@@ -66,7 +66,7 @@ CREATE TABLE products (
 
 1. Navigate to the project directory:
 ```bash
-cd /<your-path-project>/modul-02-task
+cd /<your-path-project>/modul-03-task
 ```
 
 2. Install dependencies:
