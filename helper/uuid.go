@@ -1,0 +1,12 @@
+package helper
+
+import "github.com/google/uuid"
+
+func IsValidUUID(u string) bool {
+	_, err := uuid.Parse(u)
+	return err == nil
+}
+
+func GenerateUUID() string {
+	return uuid.New().String()
+}

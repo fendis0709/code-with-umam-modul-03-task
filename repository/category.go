@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fendi/modul-02-task/helper"
 	"fendi/modul-02-task/model"
 	"fmt"
 )
@@ -41,21 +42,33 @@ func (r *CategoryRepository) GetAllCategory(ctx context.Context) ([]model.Catego
 	return categories, nil
 }
 
-func (r *CategoryRepository) GetCategoryByUUID(ctx context.Context, uuid string) (model.Category, error) {
-	query := "SELECT id, uuid, name, description FROM categories WHERE uuid = $1 AND deleted_at IS NULL"
+func (r *CategoryRepository) GetCategoryByUUID(ctx context.Context, uuid string) (*model.Category, error) {
+	isValidUUID := helper.IsValidUUID(uuid)
+	if !isValidUUID {
+		return nil, nil
+	}
+
+	query := `SELECT 
+			id, uuid, name, description 
+		FROM categories 
+		WHERE 
+			deleted_at IS NULL
+			AND uuid = $1
+	`
+
 	row := r.db.QueryRowContext(ctx, query, uuid)
 
 	var c model.Category
 	err := row.Scan(&c.ID, &c.UUID, &c.Name, &c.Description)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return model.Category{}, nil
+			return nil, nil
 		}
 		fmt.Println("repository.category.GetCategoryByUUID() Scan Error: ", err.Error())
-		return model.Category{}, err
+		return nil, err
 	}
 
-	return c, nil
+	return &c, nil
 }
 
 func (r *CategoryRepository) CreateCategory(ctx context.Context, c model.Category) error {

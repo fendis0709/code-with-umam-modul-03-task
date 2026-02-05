@@ -2,12 +2,11 @@ package service
 
 import (
 	"context"
+	"fendi/modul-02-task/helper"
 	"fendi/modul-02-task/model"
 	"fendi/modul-02-task/repository"
 	"fendi/modul-02-task/transport"
 	"fmt"
-
-	"github.com/google/uuid"
 )
 
 type CategoryService struct {
@@ -39,6 +38,9 @@ func (s *CategoryService) GetCategoryByUUID(ctx context.Context, uuid string) (t
 		fmt.Print("s.repo.GetCategoryByUUID() Error: ", err.Error())
 		return transport.CategoryItemResponse{}, err
 	}
+	if category == nil {
+		return transport.CategoryItemResponse{}, nil
+	}
 
 	categoryResponse := transport.CategoryItemResponse{
 		ID:          category.UUID,
@@ -64,7 +66,7 @@ func transformCategory(c []model.Category) []transport.CategoryItemResponse {
 }
 
 func (s *CategoryService) CreateCategory(ctx context.Context, req transport.CategoryRequest) (transport.CategoryItemResponse, error) {
-	randomUUID := uuid.New().String()
+	randomUUID := helper.GenerateUUID()
 
 	newCategory := model.Category{
 		UUID:        randomUUID,

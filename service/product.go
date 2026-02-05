@@ -2,12 +2,11 @@ package service
 
 import (
 	"context"
+	"fendi/modul-02-task/helper"
 	"fendi/modul-02-task/model"
 	"fendi/modul-02-task/repository"
 	"fendi/modul-02-task/transport"
 	"fmt"
-
-	"github.com/google/uuid"
 )
 
 type ProductService struct {
@@ -22,8 +21,8 @@ func NewProductService(repo *repository.ProductRepository, categoryRepo *reposit
 	}
 }
 
-func (s *ProductService) GetAllProduct(ctx context.Context) ([]transport.ProductItemResponse, error) {
-	products, err := s.repo.GetAllProduct(ctx)
+func (s *ProductService) GetAllProduct(ctx context.Context, keyword string) ([]transport.ProductItemResponse, error) {
+	products, err := s.repo.GetAllProduct(ctx, keyword)
 	if err != nil {
 		fmt.Print("s.repo.GetAllProduct() Error: ", err.Error())
 		return nil, err
@@ -42,6 +41,9 @@ func (s *ProductService) GetProductByUUID(ctx context.Context, uuid string) (tra
 	if err != nil {
 		fmt.Print("s.repo.GetProductByUUID() Error: ", err.Error())
 		return transport.ProductItemResponse{}, err
+	}
+	if product == nil {
+		return transport.ProductItemResponse{}, nil
 	}
 
 	var categoryResponse *transport.CategoryItemResponse
@@ -90,7 +92,8 @@ func transformProduct(p []model.Product) []transport.ProductItemResponse {
 }
 
 func (s *ProductService) CreateProduct(ctx context.Context, req transport.ProductRequest) (transport.ProductItemResponse, error) {
-	randomUUID := uuid.New().String()
+	randUUID := helper.GenerateUUID()
+	randSKU := helper.GenerateSKU()
 
 	var categoryID *int64
 	if req.CategoryID != "" {
@@ -100,17 +103,24 @@ func (s *ProductService) CreateProduct(ctx context.Context, req transport.Produc
 			fmt.Print("s.categoryRepo.GetCategoryByUUID() Error: ", err.Error())
 			return transport.ProductItemResponse{}, err
 		}
+		if category == nil {
+			fmt.Print("s.categoryRepo.GetCategoryByUUID() Error: category not found")
+			return transport.ProductItemResponse{}, fmt.Errorf("category not found")
+		}
 		if category.UUID != "" {
 			categoryID = &category.ID
 		}
 	}
 
 	newProduct := model.Product{
-		UUID:       randomUUID,
-		Name:       req.Name,
-		Stock:      req.Stock,
-		Price:      req.Price,
-		CategoryID: categoryID,
+		UUID:  randUUID,
+		SKU:   randSKU,
+		Name:  req.Name,
+		Stock: req.Stock,
+		Price: req.Price,
+		Category: &model.Category{
+			ID: *categoryID,
+		},
 	}
 
 	err := s.repo.CreateProduct(ctx, newProduct)
@@ -120,10 +130,13 @@ func (s *ProductService) CreateProduct(ctx context.Context, req transport.Produc
 	}
 
 	// Fetch the created product to get category info
-	createdProduct, err := s.repo.GetProductByUUID(ctx, randomUUID)
+	createdProduct, err := s.repo.GetProductByUUID(ctx, randUUID)
 	if err != nil {
 		fmt.Print("s.repo.GetProductByUUID() Error: ", err.Error())
 		return transport.ProductItemResponse{}, err
+	}
+	if createdProduct == nil {
+		return transport.ProductItemResponse{}, fmt.Errorf("created product not found")
 	}
 
 	var categoryResponse *transport.CategoryItemResponse
@@ -155,17 +168,23 @@ func (s *ProductService) UpdateProduct(ctx context.Context, id string, req trans
 			fmt.Print("s.categoryRepo.GetCategoryByUUID() Error: ", err.Error())
 			return transport.ProductItemResponse{}, err
 		}
+		if category == nil {
+			fmt.Print("s.categoryRepo.GetCategoryByUUID() Error: category not found")
+			return transport.ProductItemResponse{}, fmt.Errorf("category not found")
+		}
 		if category.UUID != "" {
 			categoryID = &category.ID
 		}
 	}
 
 	newProduct := model.Product{
-		UUID:       id,
-		Name:       req.Name,
-		Stock:      req.Stock,
-		Price:      req.Price,
-		CategoryID: categoryID,
+		UUID:  id,
+		Name:  req.Name,
+		Stock: req.Stock,
+		Price: req.Price,
+		Category: &model.Category{
+			ID: *categoryID,
+		},
 	}
 
 	err := s.repo.UpdateProduct(ctx, newProduct)
@@ -179,6 +198,9 @@ func (s *ProductService) UpdateProduct(ctx context.Context, id string, req trans
 	if err != nil {
 		fmt.Print("s.repo.GetProductByUUID() Error: ", err.Error())
 		return transport.ProductItemResponse{}, err
+	}
+	if updatedProduct == nil {
+		return transport.ProductItemResponse{}, fmt.Errorf("updated product not found")
 	}
 
 	var categoryResponse *transport.CategoryItemResponse

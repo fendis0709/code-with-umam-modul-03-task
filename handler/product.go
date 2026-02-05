@@ -30,7 +30,9 @@ func (h *ProductHandler) HandleProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *ProductHandler) GetAllProduct(w http.ResponseWriter, r *http.Request) {
-	res, err := h.service.GetAllProduct(r.Context())
+	keyword := r.URL.Query().Get("search")
+
+	res, err := h.service.GetAllProduct(r.Context(), keyword)
 	if err != nil {
 		fmt.Print("handler.product.GetAllProduct() Error: ", err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
