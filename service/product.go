@@ -160,6 +160,16 @@ func (s *ProductService) CreateProduct(ctx context.Context, req transport.Produc
 }
 
 func (s *ProductService) UpdateProduct(ctx context.Context, id string, req transport.ProductRequest) (transport.ProductItemResponse, error) {
+	product, err := s.repo.GetProductByUUID(ctx, id)
+	if err != nil {
+		fmt.Print("s.repo.GetProductByUUID() Error: ", err.Error())
+		return transport.ProductItemResponse{}, err
+	}
+	if product == nil {
+		fmt.Print("s.repo.GetProductByUUID() Error: product not found")
+		return transport.ProductItemResponse{}, fmt.Errorf("product not found")
+	}
+
 	var categoryID *int64
 	if req.CategoryID != "" {
 		// Fetch category to get the integer ID
@@ -182,12 +192,15 @@ func (s *ProductService) UpdateProduct(ctx context.Context, id string, req trans
 		Name:  req.Name,
 		Stock: req.Stock,
 		Price: req.Price,
-		Category: &model.Category{
-			ID: *categoryID,
-		},
 	}
 
-	err := s.repo.UpdateProduct(ctx, newProduct)
+	if categoryID != nil {
+		newProduct.Category = &model.Category{
+			ID: *categoryID,
+		}
+	}
+
+	err = s.repo.UpdateProduct(ctx, newProduct)
 	if err != nil {
 		fmt.Print("s.repo.UpdateProduct() Error: ", err.Error())
 		return transport.ProductItemResponse{}, err

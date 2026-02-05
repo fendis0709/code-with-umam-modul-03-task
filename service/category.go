@@ -17,8 +17,8 @@ func NewCategoryService(repo *repository.CategoryRepository) *CategoryService {
 	return &CategoryService{repo: repo}
 }
 
-func (s *CategoryService) GetAllCategory(ctx context.Context) ([]transport.CategoryItemResponse, error) {
-	categories, err := s.repo.GetAllCategory(ctx)
+func (s *CategoryService) GetAllCategory(ctx context.Context, keyword string) ([]transport.CategoryItemResponse, error) {
+	categories, err := s.repo.GetAllCategory(ctx, keyword)
 	if err != nil {
 		fmt.Print("s.repo.GetAllCategory() Error: ", err.Error())
 		return nil, err
@@ -90,13 +90,23 @@ func (s *CategoryService) CreateCategory(ctx context.Context, req transport.Cate
 }
 
 func (s *CategoryService) UpdateCategory(ctx context.Context, id string, req transport.CategoryRequest) (transport.CategoryItemResponse, error) {
+	category, err := s.repo.GetCategoryByUUID(ctx, id)
+	if err != nil {
+		fmt.Print("s.repo.GetCategoryByUUID() Error: ", err.Error())
+		return transport.CategoryItemResponse{}, err
+	}
+	if category == nil {
+		fmt.Print("s.repo.GetCategoryByUUID() Error: category not found")
+		return transport.CategoryItemResponse{}, fmt.Errorf("category not found")
+	}
+
 	newCategory := model.Category{
 		UUID:        id,
 		Name:        req.Name,
 		Description: &req.Description,
 	}
 
-	err := s.repo.UpdateCategory(ctx, newCategory)
+	err = s.repo.UpdateCategory(ctx, newCategory)
 	if err != nil {
 		fmt.Print("s.repo.UpdateCategory() Error: ", err.Error())
 		return transport.CategoryItemResponse{}, err

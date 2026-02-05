@@ -16,9 +16,22 @@ func NewCategoryRepository(db *sql.DB) *CategoryRepository {
 	return &CategoryRepository{db: db}
 }
 
-func (r *CategoryRepository) GetAllCategory(ctx context.Context) ([]model.Category, error) {
-	query := "SELECT id, uuid, name, description FROM categories WHERE deleted_at IS NULL ORDER BY id ASC"
-	rows, err := r.db.QueryContext(ctx, query)
+func (r *CategoryRepository) GetAllCategory(ctx context.Context, keyword string) ([]model.Category, error) {
+	query :=
+		`SELECT 
+			id, uuid, name, description 
+		FROM categories 
+		WHERE deleted_at IS NULL`
+
+	var args []interface{}
+	if len(keyword) > 0 {
+		query += " AND name ILIKE '%' || $1 || '%'"
+		args = append(args, keyword)
+	}
+
+	query += ` ORDER BY id ASC`
+
+	rows, err := r.db.QueryContext(ctx, query, args...)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return []model.Category{}, nil

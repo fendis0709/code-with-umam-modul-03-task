@@ -48,12 +48,14 @@ func (h *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	var productReq transport.ProductRequest
 	err := json.NewDecoder(r.Body).Decode(&productReq)
 	if err != nil {
+		fmt.Print("handler.product.CreateProduct() Decode Error: ", err.Error())
 		http.Error(w, "Invalid Request Body", http.StatusBadRequest)
 		return
 	}
 
 	res, err := h.service.CreateProduct(r.Context(), productReq)
 	if err != nil {
+		fmt.Print("handler.product.CreateProduct() Error: ", err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -83,16 +85,19 @@ func (h *ProductHandler) HandleProductItem(w http.ResponseWriter, r *http.Reques
 func (h *ProductHandler) GetProductByUUID(w http.ResponseWriter, r *http.Request) {
 	idStr := r.URL.Path[len("/products/"):]
 	if idStr == "" {
+		fmt.Print("handler.product.GetProductByUUID() Error: ID is empty")
 		http.Error(w, "Not Found", http.StatusNotFound)
 		return
 	}
 
 	res, err := h.service.GetProductByUUID(r.Context(), idStr)
 	if err != nil {
+		fmt.Print("handler.product.GetProductByUUID() Error: ", err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 	if res.ID == "" {
+		fmt.Print("handler.product.GetProductByUUID() Error: Product not found")
 		http.Error(w, "Not Found", http.StatusNotFound)
 		return
 	}
@@ -105,6 +110,7 @@ func (h *ProductHandler) GetProductByUUID(w http.ResponseWriter, r *http.Request
 func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	idStr := r.URL.Path[len("/products/"):]
 	if idStr == "" {
+		fmt.Print("handler.product.UpdateProduct() Error: ID is empty")
 		http.Error(w, "Not Found", http.StatusNotFound)
 		return
 	}
@@ -112,12 +118,25 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	var productReq transport.ProductRequest
 	err := json.NewDecoder(r.Body).Decode(&productReq)
 	if err != nil {
+		fmt.Print("handler.product.UpdateProduct() Decode Error: ", err.Error())
 		http.Error(w, "Invalid Request Body", http.StatusBadRequest)
 		return
 	}
 
 	res, err := h.service.UpdateProduct(r.Context(), idStr, productReq)
 	if err != nil {
+		if err.Error() == "product not found" {
+			fmt.Print("handler.product.UpdateProduct() Error: Product not found")
+			http.Error(w, "Not Found", http.StatusNotFound)
+			return
+		}
+		if err.Error() == "category not found" {
+			fmt.Print("handler.product.UpdateProduct() Error: Category not found")
+			http.Error(w, "Bad Request: Category not found", http.StatusBadRequest)
+			return
+		}
+
+		fmt.Print("handler.product.UpdateProduct() Error: ", err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -130,12 +149,14 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 func (h *ProductHandler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	idStr := r.URL.Path[len("/products/"):]
 	if idStr == "" {
+		fmt.Print("handler.product.DeleteProduct() Error: ID is empty")
 		http.Error(w, "Not Found", http.StatusNotFound)
 		return
 	}
 
 	err := h.service.DeleteProduct(r.Context(), idStr)
 	if err != nil {
+		fmt.Print("handler.product.DeleteProduct() Error: ", err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

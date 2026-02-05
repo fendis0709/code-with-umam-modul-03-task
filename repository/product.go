@@ -17,14 +17,13 @@ func NewProductRepository(db *sql.DB) *ProductRepository {
 }
 
 func (r *ProductRepository) GetAllProduct(ctx context.Context, keyword string) ([]model.Product, error) {
-	query := `
-		SELECT 
+	query :=
+		`SELECT 
 			p.id, p.uuid, p.name, p.stock, p.price,
 			c.id, c.uuid, c.name, c.description
 		FROM products p
 		LEFT JOIN categories c ON p.category_id = c.id AND c.deleted_at IS NULL
-		WHERE p.deleted_at IS NULL
-	`
+		WHERE p.deleted_at IS NULL`
 
 	var args []interface{}
 	if len(keyword) > 0 {
@@ -137,8 +136,13 @@ func (r *ProductRepository) CreateProduct(ctx context.Context, p model.Product) 
 }
 
 func (r *ProductRepository) UpdateProduct(ctx context.Context, p model.Product) error {
+	var categoryID *int64
+	if p.Category != nil {
+		categoryID = &p.Category.ID
+	}
+
 	query := "UPDATE products SET name = $1, stock = $2, price = $3, category_id = $4, updated_at = NOW() WHERE uuid = $5"
-	_, err := r.db.ExecContext(ctx, query, p.Name, p.Stock, p.Price, p.Category.ID, p.UUID)
+	_, err := r.db.ExecContext(ctx, query, p.Name, p.Stock, p.Price, categoryID, p.UUID)
 	if err != nil {
 		fmt.Println("repository.product.UpdateProduct() Exec Error: ", err.Error())
 	}
