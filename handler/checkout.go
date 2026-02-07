@@ -26,17 +26,22 @@ func (h *CheckoutHandler) HandleCheckout(w http.ResponseWriter, r *http.Request)
 }
 
 func (h *CheckoutHandler) Checkout(w http.ResponseWriter, r *http.Request) {
-	var categoryReq transport.CheckoutRequest
-	err := json.NewDecoder(r.Body).Decode(&categoryReq)
+	var checkoutReq transport.CheckoutRequest
+	err := json.NewDecoder(r.Body).Decode(&checkoutReq)
 	if err != nil {
 		fmt.Print("handler.checkout.Checkout() Decode Error: ", err.Error())
 		http.Error(w, "Invalid Request Body", http.StatusBadRequest)
 		return
 	}
 
-	res, err := h.service.CreateCheckout(r.Context(), categoryReq)
+	res, err := h.service.CreateCheckout(r.Context(), checkoutReq)
 	if err != nil {
 		fmt.Print("handler.checkout.Checkout() Error: ", err.Error())
+		if err.Error() == "no products found for the given UUIDs" {
+			http.Error(w, "No Products Found", http.StatusBadRequest)
+			return
+		}
+
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

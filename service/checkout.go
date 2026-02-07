@@ -16,37 +16,29 @@ func NewCheckoutService(repo *repository.CheckoutRepository, productRepo *reposi
 }
 
 func (s *CheckoutService) CreateCheckout(ctx context.Context, req transport.CheckoutRequest) (transport.CheckoutResponse, error) {
-	var SKUs []string
-	for _, item := range req.Items {
-		SKUs = append(SKUs, item.SKU)
-	}
-
-	products, err := s.productRepo.GetProductBySKUs(ctx, SKUs)
+	transaction, err := s.repo.CreateCheckoutTransaction(ctx, req)
 	if err != nil {
 		return transport.CheckoutResponse{}, err
 	}
-	if len(products) == 0 {
-		return transport.CheckoutResponse{}, nil
-	}
 
 	var totalAmount float64
-	for _, item := range req.Items {
-		for _, product := range products {
-			if item.SKU == product.SKU {
-				price := product.Price
-				if price == nil {
-					price = new(float64)
-				}
-				totalAmount += *price * float64(item.Quantity)
-			}
+	totalAmount = transaction.TotalAmount
+
+	var itemDetails []transport.CheckoutItemResponse
+	for _, detail := range transaction.Details {
+		itemResp := transport.CheckoutItemResponse{
+			ProductID:  detail.ProductUUID,
+			Quantity:   detail.Quantity,
+			UnitPrice:  detail.Price,
+			TotalPrice: detail.SubTotal,
 		}
+		itemDetails = append(itemDetails, itemResp)
 	}
 
 	checkout := transport.CheckoutResponse{
 		TotalAmount: totalAmount,
+		Items:       itemDetails,
 	}
-
-	s.repo.CreateCheckoutTransaction(ctx, req)
 
 	return checkout, nil
 }

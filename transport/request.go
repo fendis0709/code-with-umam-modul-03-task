@@ -23,6 +23,6 @@ type CheckoutRequest struct {
 
 // CheckoutItem represents an item in the checkout request.
 type CheckoutItem struct {
-	SKU      string `json:"sku"`
+	ID       string `json:"id"`
 	Quantity int64  `json:"quantity"`
 }
