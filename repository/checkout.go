@@ -32,9 +32,24 @@ func (r *CheckoutRepository) CreateCheckoutTransaction(ctx context.Context, req 
 		productUUIDs = append(productUUIDs, item.ID)
 	}
 
+	if len(productUUIDs) == 0 {
+		return nil, fmt.Errorf("no items provided for checkout")
+	}
+
+	// Build placeholders for IN clause (PostgreSQL style: $1, $2, $3...)
+	placeholders := ""
+	args := make([]interface{}, len(productUUIDs))
+	for i, uuid := range productUUIDs {
+		if i > 0 {
+			placeholders += ", "
+		}
+		placeholders += fmt.Sprintf("$%d", i+1)
+		args[i] = uuid
+	}
+
 	var query string
-	query = "SELECT id, uuid, name, stock, price FROM products WHERE id IN (?)"
-	rows, err := tx.QueryContext(ctx, query, productUUIDs)
+	query = fmt.Sprintf("SELECT id, uuid, name, stock, price FROM products WHERE uuid IN (%s)", placeholders)
+	rows, err := tx.QueryContext(ctx, query, args...)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, fmt.Errorf("no products found for the given UUIDs")
@@ -82,7 +97,7 @@ func (r *CheckoutRepository) CreateCheckoutTransaction(ctx context.Context, req 
 			}
 			newStock := *product.Stock - itemQty
 
-			query = "UPDATE products SET stock = ? WHERE uuid = ?"
+			query = "UPDATE products SET stock = $1 WHERE uuid = $2"
 			_, err := tx.ExecContext(ctx, query, newStock, product.UUID)
 			if err != nil {
 				fmt.Print("Failed to update product stock: ", err)
@@ -112,7 +127,7 @@ func (r *CheckoutRepository) CreateCheckoutTransaction(ctx context.Context, req 
 	var currentTime time.Time
 	transactionUUID = helper.GenerateUUID()
 	currentTime = time.Now()
-	query = "INSERT INTO transactions (uuid, total_amount, transaction_at) VALUES (?, ?, ?) RETURNING id"
+	query = "INSERT INTO transactions (uuid, total_amount, transaction_at) VALUES ($1, $2, $3) RETURNING id"
 	err = tx.QueryRowContext(ctx, query, transactionUUID, totalAmount, currentTime).Scan(&transactionID)
 	if err != nil {
 		fmt.Print("Failed to insert transaction: ", err)
@@ -121,7 +136,7 @@ func (r *CheckoutRepository) CreateCheckoutTransaction(ctx context.Context, req 
 
 	for i, detail := range transactionDetails {
 		var trxDetailID int64
-		query = "INSERT INTO transaction_details (transaction_id, product_id, price, quantity, sub_total) VALUES (?, ?, ?, ?, ?) RETURNING id"
+		query = "INSERT INTO transaction_details (transaction_id, product_id, price, quantity, sub_total) VALUES ($1, $2, $3, $4, $5) RETURNING id"
 		err := tx.QueryRowContext(ctx, query, transactionID, detail.ProductID, detail.Price, detail.Quantity, detail.SubTotal).Scan(&trxDetailID)
 		if err != nil {
 			fmt.Print("Failed to insert transaction detail: ", err)

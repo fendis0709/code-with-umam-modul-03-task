@@ -52,6 +52,10 @@ func main() {
 	productService := service.NewProductService(productRepo, categoryRepo)
 	productHandler := handler.NewProductHandler(productService)
 
+	checkoutRepo := repository.NewCheckoutRepository(db)
+	checkoutService := service.NewCheckoutService(checkoutRepo, productRepo)
+	checkoutHandler := handler.NewCheckoutHandler(checkoutService)
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
 			if r.URL.Path == "/" {
@@ -75,6 +79,8 @@ func main() {
 	http.HandleFunc("/categories", categoryHandler.HandleCategory)
 
 	http.HandleFunc("/categories/", categoryHandler.HandleCategoryItem)
+
+	http.HandleFunc("/checkouts", checkoutHandler.HandleCheckout)
 
 	fmt.Println("Server is up and running")
 	fmt.Printf("http://localhost:%s\n", conf.AppPort)
