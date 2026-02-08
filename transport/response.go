@@ -38,3 +38,17 @@ type CheckoutItemResponse struct {
 	UnitPrice   float64 `json:"unit_price"`
 	TotalPrice  float64 `json:"total_price"`
 }
+
+// ReportResponse represents the daily report response.
+type ReportResponse struct {
+	TotalRevenue      float64                    `json:"total_revenue"`
+	TotalTransaction  int64                      `json:"total_transaksi"`
+	MostPurchasedItem *MostPurchasedItemResponse `json:"produk_terlaris"`
+}
+
+// MostPurchasedItemResponse represents the most purchased item in the report.
+type MostPurchasedItemResponse struct {
+	ProductID   string `json:"id"`
+	ProductName string `json:"nama"`
+	Quantity    int64  `json:"qty_terjual"`
+}

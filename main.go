@@ -56,6 +56,10 @@ func main() {
 	checkoutService := service.NewCheckoutService(checkoutRepo, productRepo)
 	checkoutHandler := handler.NewCheckoutHandler(checkoutService)
 
+	reportRepo := repository.NewReportRepository(db)
+	reportService := service.NewReportService(reportRepo)
+	reportHandler := handler.NewReportHandler(reportService)
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
 			if r.URL.Path == "/" {
@@ -81,6 +85,10 @@ func main() {
 	http.HandleFunc("/categories/", categoryHandler.HandleCategoryItem)
 
 	http.HandleFunc("/checkouts", checkoutHandler.HandleCheckout)
+
+	http.HandleFunc("/reports", reportHandler.HandleReportByDate)
+
+	http.HandleFunc("/reports/hari-ini", reportHandler.HandleTodayReport)
 
 	fmt.Println("Server is up and running")
 	fmt.Printf("http://localhost:%s\n", conf.AppPort)
