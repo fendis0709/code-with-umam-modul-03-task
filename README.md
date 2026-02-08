@@ -106,6 +106,19 @@ Server is up and running
 http://localhost:6969
 ```
 
+### Deployed API
+
+This API is also deployed and accessible at:
+```
+https://fendi-modul-03-task.up.railway.app
+```
+
+You can test the API using either:
+- **Local**: `http://localhost:6969` (requires running the application locally)
+- **Deployed**: `https://fendi-modul-03-task.up.railway.app` (publicly accessible)
+
+**Note**: In all the cURL examples below, you can replace `http://localhost:6969` with `https://fendi-modul-03-task.up.railway.app` to test against the deployed version.
+
 ## API Endpoints
 
 ### General
@@ -117,6 +130,7 @@ http://localhost:6969
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/categories` | Get all categories |
+| GET | `/categories?search={keyword}` | Search categories by name |
 | POST | `/categories` | Create a new category |
 | GET | `/categories/{uuid}` | Get a specific category |
 | PUT | `/categories/{uuid}` | Update a category |
@@ -126,6 +140,7 @@ http://localhost:6969
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/products` | Get all products |
+| GET | `/products?search={keyword}` | Search products by name |
 | POST | `/products` | Create a new product |
 | GET | `/products/{uuid}` | Get a specific product |
 | PUT | `/products/{uuid}` | Update a product |
@@ -143,6 +158,12 @@ http://localhost:6969
 | GET | `/reports/hari-ini` | Get today's report |
 
 ## API Usage with cURL
+
+**Base URLs:**
+- Local: `http://localhost:6969`
+- Deployed: `https://fendi-modul-03-task.up.railway.app`
+
+*Note: All examples use `http://localhost:6969`. Replace with the deployed URL if testing the live API.*
 
 ### 1. Health Check
 Check if the server is running.
@@ -174,51 +195,76 @@ curl -X GET http://localhost:6969/categories
 ```json
 [
   {
-    "id": "550e8400-e29b-41d4-a716-446655440000",
-    "name": "Electronics",
-    "description": "Electronic devices and accessories"
+    "id": "b05d2319-dd1b-4151-803d-8e7de6efd9d0",
+    "name": "Makanan",
+    "description": null
+  },
+  {
+    "id": "b9d3398b-5039-4c40-84fc-c8299cb5926b",
+    "name": "Minuman",
+    "description": null
   }
 ]
 ```
 
 ---
 
-### 3. Create a New Category
+### 3. Search Categories
+Search for categories by name.
+
+```bash
+curl -X GET "http://localhost:6969/categories?search=makan"
+```
+
+**Response:**
+```json
+[
+  {
+    "id": "b05d2319-dd1b-4151-803d-8e7de6efd9d0",
+    "name": "Makanan",
+    "description": null
+  }
+]
+```
+
+---
+
+### 4. Create a New Category
 Add a new category to the system.
 
 ```bash
 curl -X POST http://localhost:6969/categories \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "Electronics",
-    "description": "Electronic devices and accessories"
+    "name": "Handcrafted Steel Ball",
+    "description": "Repudiandae velit vel totam quae molestiae odit autem velit."
   }'
 ```
 
 **Response:**
 ```json
 {
-  "id": "550e8400-e29b-41d4-a716-446655440000",
-  "name": "Electronics",
-  "description": "Electronic devices and accessories"
+  "id": "0259e3a9-22d4-4686-aaaf-1006b832aff7",
+  "name": "Handcrafted Steel Ball",
+  "description": "Repudiandae velit vel totam quae molestiae odit autem velit."
 }
 ```
 
 ---
 
-### 4. Get Category by UUID
+### 5. Get Category by UUID
 Retrieve a specific category by its UUID.
 
 ```bash
-curl -X GET http://localhost:6969/categories/550e8400-e29b-41d4-a716-446655440000
+curl -X GET http://localhost:6969/categories/b05d2319-dd1b-4151-803d-8e7de6efd9d0
 ```
 
 **Response:**
 ```json
 {
-  "id": "550e8400-e29b-41d4-a716-446655440000",
-  "name": "Electronics",
-  "description": "Electronic devices and accessories"
+  "id": "b05d2319-dd1b-4151-803d-8e7de6efd9d0",
+  "name": "Makanan",
+  "description": null
 }
 ```
 
@@ -229,22 +275,25 @@ Not Found
 
 ---
 
-### 5. Update a Category
+### 6. Update a Category
 Update an existing category by its UUID.
 
 ```bash
-curl -X PUT http://localhost:6969/categories/550e8400-e29b-41d4-a716-446655440000 \
+curl -X PUT http://localhost:6969/categories/0259e3a9-22d4-4686-aaaf-1006b832aff7 \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "Electronics & Gadgets",
-    "description": "All types of electronic devices and gadgets"
+    "name": "Licensed Concrete Table",
+    "description": "Maxime aspernatur vel et qui."
   }'
 ```
 
 **Response:**
-```
-HTTP 200 OK
-(empty body)
+```json
+{
+  "id": "0259e3a9-22d4-4686-aaaf-1006b832aff7",
+  "name": "Licensed Concrete Table",
+  "description": "Maxime aspernatur vel et qui."
+}
 ```
 
 **Error Response (Not Found):**
@@ -254,17 +303,19 @@ Not Found
 
 ---
 
-### 6. Delete a Category
+### 7. Delete a Category
 Remove a category from the system.
 
 ```bash
-curl -X DELETE http://localhost:6969/categories/550e8400-e29b-41d4-a716-446655440000
+curl -X DELETE http://localhost:6969/categories/0259e3a9-22d4-4686-aaaf-1006b832aff7
 ```
 
 **Response:**
-```
-HTTP 200 OK
-(empty body)
+```json
+{
+  "code": 200,
+  "status": "OK"
+}
 ```
 
 **Error Response (Not Found):**
@@ -276,7 +327,7 @@ Not Found
 
 ## Product Endpoints
 
-### 7. Get All Products
+### 8. Get All Products
 Retrieve all products with their associated categories.
 
 ```bash
@@ -287,14 +338,14 @@ curl -X GET http://localhost:6969/products
 ```json
 [
   {
-    "id": "660e8400-e29b-41d4-a716-446655440000",
-    "name": "iPhone 15",
-    "stock": 50,
-    "price": 999.99,
+    "id": "8a046717-8407-4b22-b019-f7af47949c83",
+    "name": "Indomie Goreng",
+    "stock": 100,
+    "price": 2500,
     "category": {
-      "id": "550e8400-e29b-41d4-a716-446655440000",
-      "name": "Electronics",
-      "description": "Electronic devices and accessories"
+      "id": "b05d2319-dd1b-4151-803d-8e7de6efd9d0",
+      "name": "Makanan",
+      "description": null
     }
   }
 ]
@@ -302,55 +353,81 @@ curl -X GET http://localhost:6969/products
 
 ---
 
-### 8. Create a New Product
+### 9. Search Products
+Search for products by name.
+
+```bash
+curl -X GET "http://localhost:6969/products?search=indo"
+```
+
+**Response:**
+```json
+[
+  {
+    "id": "8a046717-8407-4b22-b019-f7af47949c83",
+    "name": "Indomie Goreng",
+    "stock": 100,
+    "price": 2500,
+    "category": {
+      "id": "b05d2319-dd1b-4151-803d-8e7de6efd9d0",
+      "name": "Makanan",
+      "description": null
+    }
+  }
+]
+```
+
+---
+
+### 10. Create a New Product
 Add a new product to the system.
 
 ```bash
 curl -X POST http://localhost:6969/products \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "iPhone 15",
-    "stock": 50,
-    "price": 999.99,
-    "category_id": "550e8400-e29b-41d4-a716-446655440000"
+    "name": "Indomie Goreng",
+    "stock": 100,
+    "price": 2500,
+    "category_id": "b05d2319-dd1b-4151-803d-8e7de6efd9d0"
   }'
 ```
 
 **Response:**
 ```json
 {
-  "id": "660e8400-e29b-41d4-a716-446655440000",
-  "name": "iPhone 15",
-  "stock": 50,
-  "price": 999.99,
+  "id": "8a046717-8407-4b22-b019-f7af47949c83",
+  "name": "Indomie Goreng",
+  "stock": 100,
+  "price": 2500,
   "category": {
-    "id": "550e8400-e29b-41d4-a716-446655440000",
-    "name": "Electronics",
-    "description": "Electronic devices and accessories"
+    "id": "b05d2319-dd1b-4151-803d-8e7de6efd9d0",
+    "name": "Makanan",
+    "description": null
   }
 }
 ```
 
 ---
 
-### 9. Get Product by UUID
+### 11. Get Product by UUID
 Retrieve a specific product by its UUID.
 
 ```bash
-curl -X GET http://localhost:6969/products/660e8400-e29b-41d4-a716-446655440000
+curl -X GET http://localhost:6969/products/8a046717-8407-4b22-b019-f7af47949c83
 ```
 
 **Response:**
 ```json
 {
-  "id": "660e8400-e29b-41d4-a716-446655440000",
-  "name": "iPhone 15",
-  "stock": 50,
-  "price": 999.99,
+  "id": "8a046717-8407-4b22-b019-f7af47949c83",
+  "name": "Indomie Goreng",
+  "stock": 100,
+  "price": 2500,
   "category": {
-    "id": "550e8400-e29b-41d4-a716-446655440000",
-    "name": "Electronics",
-    "description": "Electronic devices and accessories"
+    "id": "b05d2319-dd1b-4151-803d-8e7de6efd9d0",
+    "name": "Makanan",
+    "description": null
   }
 }
 ```
@@ -362,24 +439,33 @@ Not Found
 
 ---
 
-### 10. Update a Product
+### 12. Update a Product
 Update an existing product by its UUID.
 
 ```bash
-curl -X PUT http://localhost:6969/products/660e8400-e29b-41d4-a716-446655440000 \
+curl -X PUT http://localhost:6969/products/69ad9789-e397-42ff-a551-f37e452c2a44 \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "iPhone 15 Pro",
-    "stock": 30,
-    "price": 1199.99,
-    "category_id": "550e8400-e29b-41d4-a716-446655440000"
+    "name": "Licensed Concrete Car",
+    "stock": 15,
+    "price": 3500,
+    "category_id": "b05d2319-dd1b-4151-803d-8e7de6efd9d0"
   }'
 ```
 
 **Response:**
-```
-HTTP 200 OK
-(empty body)
+```json
+{
+  "id": "69ad9789-e397-42ff-a551-f37e452c2a44",
+  "name": "Licensed Concrete Car",
+  "stock": 15,
+  "price": 3500,
+  "category": {
+    "id": "b05d2319-dd1b-4151-803d-8e7de6efd9d0",
+    "name": "Makanan",
+    "description": null
+  }
+}
 ```
 
 **Error Response (Not Found):**
@@ -389,17 +475,19 @@ Not Found
 
 ---
 
-### 11. Delete a Product
+### 13. Delete a Product
 Remove a product from the system.
 
 ```bash
-curl -X DELETE http://localhost:6969/products/660e8400-e29b-41d4-a716-446655440000
+curl -X DELETE http://localhost:6969/products/69ad9789-e397-42ff-a551-f37e452c2a44
 ```
 
 **Response:**
-```
-HTTP 200 OK
-(empty body)
+```json
+{
+  "code": 200,
+  "status": "OK"
+}
 ```
 
 **Error Response (Not Found):**
@@ -411,7 +499,7 @@ Not Found
 
 ## Checkout Endpoints
 
-### 12. Create a Checkout Transaction
+### 14. Create a Checkout Transaction
 Create a new checkout transaction with multiple products.
 
 ```bash
@@ -420,12 +508,8 @@ curl -X POST http://localhost:6969/checkouts \
   -d '{
     "items": [
       {
-        "id": "660e8400-e29b-41d4-a716-446655440000",
+        "id": "8a046717-8407-4b22-b019-f7af47949c83",
         "quantity": 2
-      },
-      {
-        "id": "770e8400-e29b-41d4-a716-446655440001",
-        "quantity": 1
       }
     ]
   }'
@@ -434,23 +518,16 @@ curl -X POST http://localhost:6969/checkouts \
 **Response:**
 ```json
 {
-  "id": "880e8400-e29b-41d4-a716-446655440000",
-  "date": "2026-02-08T10:30:00Z",
-  "total_amount": 2999.97,
+  "id": "9d5898fb-19d2-4878-b76f-c841679bfda4",
+  "date": "2026-02-08",
+  "total_amount": 5000,
   "items": [
     {
-      "product_id": "660e8400-e29b-41d4-a716-446655440000",
-      "product_name": "iPhone 15",
+      "product_id": "8a046717-8407-4b22-b019-f7af47949c83",
+      "product_name": "Indomie Goreng",
       "quantity": 2,
-      "unit_price": 999.99,
-      "total_price": 1999.98
-    },
-    {
-      "product_id": "770e8400-e29b-41d4-a716-446655440001",
-      "product_name": "MacBook Pro",
-      "quantity": 1,
-      "unit_price": 999.99,
-      "total_price": 999.99
+      "unit_price": 2500,
+      "total_price": 5000
     }
   ]
 }
@@ -465,7 +542,7 @@ No Products Found
 
 ## Report Endpoints
 
-### 13. Get Today's Report
+### 15. Get Today's Report
 Retrieve today's sales report including total revenue, transaction count, and most purchased item.
 
 ```bash
@@ -475,23 +552,23 @@ curl -X GET http://localhost:6969/reports/hari-ini
 **Response:**
 ```json
 {
-  "total_revenue": 15999.95,
-  "total_transaksi": 8,
+  "total_revenue": 17500,
+  "total_transaksi": 6,
   "produk_terlaris": {
-    "id": "660e8400-e29b-41d4-a716-446655440000",
-    "nama": "iPhone 15",
-    "qty_terjual": 25
+    "id": "8a046717-8407-4b22-b019-f7af47949c83",
+    "nama": "Indomie Goreng",
+    "qty_terjual": 7
   }
 }
 ```
 
 ---
 
-### 14. Get Report by Date Range
+### 16. Get Report by Date Range
 Retrieve sales report for a specific date range.
 
 ```bash
-curl -X GET "http://localhost:6969/reports?start_date=2026-02-01&end_date=2026-02-08"
+curl -X GET "http://localhost:6969/reports?start_date=2026-01-01&end_date=2026-12-31"
 ```
 
 **Query Parameters:**
@@ -501,12 +578,12 @@ curl -X GET "http://localhost:6969/reports?start_date=2026-02-01&end_date=2026-0
 **Response:**
 ```json
 {
-  "total_revenue": 45999.85,
-  "total_transaksi": 23,
+  "total_revenue": 17500,
+  "total_transaksi": 6,
   "produk_terlaris": {
-    "id": "660e8400-e29b-41d4-a716-446655440000",
-    "nama": "iPhone 15",
-    "qty_terjual": 67
+    "id": "8a046717-8407-4b22-b019-f7af47949c83",
+    "nama": "Indomie Goreng",
+    "qty_terjual": 7
   }
 }
 ```
@@ -573,7 +650,7 @@ curl -X GET "http://localhost:6969/reports?start_date=2026-02-01&end_date=2026-0
 ```json
 {
   "id": "string (UUID v4, auto-generated)",
-  "date": "string (ISO 8601 timestamp)",
+  "date": "string (YYYY-MM-DD format)",
   "total_amount": "float",
   "items": [
     {
@@ -613,3 +690,5 @@ curl -X GET "http://localhost:6969/reports?start_date=2026-02-01&end_date=2026-0
 - Checkout transactions calculate total amounts based on current product prices
 - Reports aggregate transaction data and identify the most purchased products
 - Date range queries in reports use YYYY-MM-DD format
+- Search functionality is available for both categories and products using the `search` query parameter
+- Checkout response date field uses YYYY-MM-DD format (not ISO 8601)

@@ -1,0 +1,1419 @@
+{
+  "info": {
+    "_postman_id": "66454d6f-122b-4b26-8829-ddbbce1813c4",
+    "name": "CodeWithUmam",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "2648013"
+  },
+  "item": [
+    {
+      "name": "03 - Search and Transaction [TASK]",
+      "item": [
+        {
+          "name": "Products",
+          "item": [
+            {
+              "name": "Get Products",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseURL}}/products",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "products"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "[200] OK",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseURL}}/products",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "products"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 05 Feb 2026 16:23:18 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "577"
+                    }
+                  ],
+                  "cookie": [
+                    {
+                      "expires": "Invalid Date",
+                      "domain": "",
+                      "path": ""
+                    }
+                  ],
+                  "body": "[\n  {\n    \"id\": \"8a046717-8407-4b22-b019-f7af47949c83\",\n    \"name\": \"Indomie Goreng\",\n    \"stock\": 100,\n    \"price\": 2500,\n    \"category\": {\n      \"id\": \"b05d2319-dd1b-4151-803d-8e7de6efd9d0\",\n      \"name\": \"Makanan\",\n      \"description\": null\n    }\n  }\n]"
+                }
+              ]
+            },
+            {
+              "name": "Search Products",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseURL}}/products?search=indo",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": "indo"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "[200] OK",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseURL}}/products?search=indo",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "products"
+                      ],
+                      "query": [
+                        {
+                          "key": "search",
+                          "value": "indo"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 05 Feb 2026 16:23:53 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "190"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "[\n  {\n    \"id\": \"8a046717-8407-4b22-b019-f7af47949c83\",\n    \"name\": \"Indomie Goreng\",\n    \"stock\": 100,\n    \"price\": 2500,\n    \"category\": {\n      \"id\": \"b05d2319-dd1b-4151-803d-8e7de6efd9d0\",\n      \"name\": \"Makanan\",\n      \"description\": null\n    }\n  }\n]"
+                }
+              ]
+            },
+            {
+              "name": "Create Product",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{$randomProductName}}\",\r\n  \"price\": 2500,\r\n  \"stock\": 100,\r\n  \"category_id\": \"b05d2319-dd1b-4151-803d-8e7de6efd9d0\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/products",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "products"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "[201] Created",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Indomie Goreng\",\r\n  \"price\": 2500,\r\n  \"stock\": 100,\r\n  \"category_id\": \"b05d2319-dd1b-4151-803d-8e7de6efd9d0\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseURL}}/products",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "products"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 05 Feb 2026 16:16:45 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "188"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"id\": \"8a046717-8407-4b22-b019-f7af47949c83\",\n  \"name\": \"Indomie Goreng\",\n  \"stock\": 100,\n  \"price\": 2500,\n  \"category\": {\n    \"id\": \"b05d2319-dd1b-4151-803d-8e7de6efd9d0\",\n    \"name\": \"Makanan\",\n    \"description\": null\n  }\n}"
+                }
+              ]
+            },
+            {
+              "name": "Detail Product",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseURL}}/products/:id",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "products",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "8a046717-8407-4b22-b019-f7af47949c83"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "[200] OK",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseURL}}/products/:id",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "products",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "8a046717-8407-4b22-b019-f7af47949c83"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 05 Feb 2026 16:17:27 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "188"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"id\": \"8a046717-8407-4b22-b019-f7af47949c83\",\n  \"name\": \"Indomie Goreng\",\n  \"stock\": 100,\n  \"price\": 2500,\n  \"category\": {\n    \"id\": \"b05d2319-dd1b-4151-803d-8e7de6efd9d0\",\n    \"name\": \"Makanan\",\n    \"description\": null\n  }\n}"
+                }
+              ]
+            },
+            {
+              "name": "Update Product",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{$randomProductName}}\",\r\n  \"price\": 3500,\r\n  \"stock\": 15,\r\n  \"category_id\": \"69ad9789-e397-42ff-a551-f37e452c2a44\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{baseURL}}/products/:id",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "products",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "69ad9789-e397-42ff-a551-f37e452c2a44"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "[200] OK",
+                  "originalRequest": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"Licensed Concrete Car\",\r\n  \"price\": 3500,\r\n  \"stock\": 15,\r\n  \"category_id\": \"b05d2319-dd1b-4151-803d-8e7de6efd9d0\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseURL}}/products/:id",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "products",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "69ad9789-e397-42ff-a551-f37e452c2a44"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 05 Feb 2026 16:22:53 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "194"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"id\": \"69ad9789-e397-42ff-a551-f37e452c2a44\",\n  \"name\": \"Licensed Concrete Car\",\n  \"stock\": 15,\n  \"price\": 3500,\n  \"category\": {\n    \"id\": \"b05d2319-dd1b-4151-803d-8e7de6efd9d0\",\n    \"name\": \"Makanan\",\n    \"description\": null\n  }\n}"
+                }
+              ]
+            },
+            {
+              "name": "Delete Product",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{baseURL}}/products/:id",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "products",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "69ad9789-e397-42ff-a551-f37e452c2a44"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "[200] OK",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": ""
+                    },
+                    "url": {
+                      "raw": "{{baseURL}}/products/:id",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "products",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "69ad9789-e397-42ff-a551-f37e452c2a44"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 05 Feb 2026 16:24:34 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "27"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"code\": 200,\n  \"status\": \"OK\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Categories",
+          "item": [
+            {
+              "name": "Get Categories",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseURL}}/categories",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "categories"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "[200] OK",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseURL}}/categories",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "categories"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 05 Feb 2026 15:52:07 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "251"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "[\n  {\n    \"id\": \"b05d2319-dd1b-4151-803d-8e7de6efd9d0\",\n    \"name\": \"Makanan\",\n    \"description\": null\n  },\n  {\n    \"id\": \"b9d3398b-5039-4c40-84fc-c8299cb5926b\",\n    \"name\": \"Minuman\",\n    \"description\": null\n  }\n]"
+                }
+              ]
+            },
+            {
+              "name": "Search Categories",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseURL}}/categories?search=makan",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "categories"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": "makan"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "[200] OK",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseURL}}/categories?search=makan",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "categories"
+                      ],
+                      "query": [
+                        {
+                          "key": "search",
+                          "value": "makan"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 05 Feb 2026 16:12:47 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "84"
+                    }
+                  ],
+                  "cookie": [
+                    {
+                      "expires": "Invalid Date",
+                      "domain": "",
+                      "path": ""
+                    }
+                  ],
+                  "body": "[\n  {\n    \"id\": \"b05d2319-dd1b-4151-803d-8e7de6efd9d0\",\n    \"name\": \"Makanan\",\n    \"description\": null\n  }\n]"
+                }
+              ]
+            },
+            {
+              "name": "Detail Category",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseURL}}/categories/:id",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "categories",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "b05d2319-dd1b-4151-803d-8e7de6efd9d0"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "[200] OK",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseURL}}/categories/:id",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "categories",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "b05d2319-dd1b-4151-803d-8e7de6efd9d0"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 05 Feb 2026 16:14:19 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "82"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"id\": \"b05d2319-dd1b-4151-803d-8e7de6efd9d0\",\n  \"name\": \"Makanan\",\n  \"description\": null\n}"
+                }
+              ]
+            },
+            {
+              "name": "Create Category",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{$randomProductName}}\",\r\n  \"description\": \"{{$randomLoremSentence}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/categories",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "categories"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "[201] Created",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"{{$randomProductName}}\",\r\n  \"description\": \"{{$randomLoremSentence}}\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseURL}}/categories",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "categories"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 05 Feb 2026 16:14:43 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "155"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"id\": \"0259e3a9-22d4-4686-aaaf-1006b832aff7\",\n  \"name\": \"Handcrafted Steel Ball\",\n  \"description\": \"Repudiandae velit vel totam quae molestiae odit autem velit.\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Update Category",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{$randomProductName}}\",\r\n  \"description\": \"{{$randomLoremSentence}}\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/categories/:id",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "categories",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "0259e3a9-22d4-4686-aaaf-1006b832aff7"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "[200] OK",
+                  "originalRequest": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"name\": \"{{$randomProductName}}\",\r\n  \"description\": \"{{$randomLoremSentence}}\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseURL}}/categories/:id",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "categories",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "0259e3a9-22d4-4686-aaaf-1006b832aff7"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 05 Feb 2026 16:15:19 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "125"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"id\": \"0259e3a9-22d4-4686-aaaf-1006b832aff7\",\n  \"name\": \"Licensed Concrete Table\",\n  \"description\": \"Maxime aspernatur vel et qui.\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Delete Category",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseURL}}/categories/:id",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "categories",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "0259e3a9-22d4-4686-aaaf-1006b832aff7"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "[200] OK",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseURL}}/categories/:id",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "categories",
+                        ":id"
+                      ],
+                      "variable": [
+                        {
+                          "key": "id",
+                          "value": "0259e3a9-22d4-4686-aaaf-1006b832aff7"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Thu, 05 Feb 2026 16:15:46 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "27"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"code\": 200,\n  \"status\": \"OK\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Transaction",
+          "item": [
+            {
+              "name": "Create Order Transaction",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"items\": [\r\n    {\r\n      \"id\": \"8a046717-8407-4b22-b019-f7af47949c83\",\r\n      \"quantity\": 1\r\n    }\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseURL}}/checkouts",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "checkouts"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "[200] OK",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"items\": [\r\n    {\r\n      \"id\": \"8a046717-8407-4b22-b019-f7af47949c83\",\r\n      \"quantity\": 2\r\n    }\r\n  ]\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseURL}}/checkouts",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "checkouts"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Sun, 08 Feb 2026 04:16:11 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "232"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"id\": \"9d5898fb-19d2-4878-b76f-c841679bfda4\",\n  \"date\": \"2026-02-08\",\n  \"total_amount\": 5000,\n  \"items\": [\n    {\n      \"product_id\": \"8a046717-8407-4b22-b019-f7af47949c83\",\n      \"product_name\": \"Indomie Goreng\",\n      \"quantity\": 2,\n      \"unit_price\": 2500,\n      \"total_price\": 5000\n    }\n  ]\n}"
+                }
+              ]
+            },
+            {
+              "name": "Reports (Today)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseURL}}/reports/hari-ini",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "reports",
+                    "hari-ini"
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "[200] OK",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseURL}}/reports/hari-ini",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "reports",
+                        "hari-ini"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Sun, 08 Feb 2026 07:13:23 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "148"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n  \"total_revenue\": 17500,\n  \"total_transaksi\": 6,\n  \"produk_terlaris\": {\n    \"id\": \"8a046717-8407-4b22-b019-f7af47949c83\",\n    \"nama\": \"Indomie Goreng\",\n    \"qty_terjual\": 7\n  }\n}"
+                }
+              ]
+            },
+            {
+              "name": "Reports (By Date)",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseURL}}/reports?start_date=2026-01-01&end_date=2026-12-31",
+                  "host": [
+                    "{{baseURL}}"
+                  ],
+                  "path": [
+                    "reports"
+                  ],
+                  "query": [
+                    {
+                      "key": "start_date",
+                      "value": "2026-01-01",
+                      "type": "text"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "2026-12-31",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "[200] OK",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseURL}}/reports?start_date=2026-01-01&end_date=2026-12-31",
+                      "host": [
+                        "{{baseURL}}"
+                      ],
+                      "path": [
+                        "reports"
+                      ],
+                      "query": [
+                        {
+                          "key": "start_date",
+                          "value": "2026-01-01"
+                        },
+                        {
+                          "key": "end_date",
+                          "value": "2026-12-31"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json",
+                      "description": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "Date",
+                      "value": "Sun, 08 Feb 2026 07:18:13 GMT"
+                    },
+                    {
+                      "key": "Content-Length",
+                      "value": "148"
+                    }
+                  ],
+                  "cookie": [
+                    {
+                      "expires": "Invalid Date",
+                      "domain": "",
+                      "path": ""
+                    }
+                  ],
+                  "body": "{\n  \"total_revenue\": 17500,\n  \"total_transaksi\": 6,\n  \"produk_terlaris\": {\n    \"id\": \"8a046717-8407-4b22-b019-f7af47949c83\",\n    \"nama\": \"Indomie Goreng\",\n    \"qty_terjual\": 7\n  }\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Home",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}",
+              "host": [
+                "{{baseURL}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "[200] OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseURL}}",
+                  "host": [
+                    "{{baseURL}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 21 Jan 2026 03:49:03 GMT"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "27"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"code\": 200,\n  \"status\": \"OK\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseURL",
+      "value": "https://fendi-modul-03-task.up.railway.app",
+      "type": "default"
+    }
+  ]
+}
