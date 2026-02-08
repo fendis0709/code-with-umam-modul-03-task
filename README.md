@@ -1,12 +1,12 @@
-# Category & Product API
+# Category, Product & Transaction API
 
-A REST API for managing categories and products built with Go and PostgreSQL, following clean architecture principles.
+A REST API for managing categories, products, and transactions built with Go and PostgreSQL, following clean architecture principles.
 
 ## Course Reference
 
-This project is part of the "Bootcamp Jago Golang - Code With Umam" course on [CodeWithUmam - Course Online](https://docs.kodingworks.io/s/a378a9fe-c0e0-4fa1-a896-43ae347a7b61) and [CodeWithUmam - Youtube](https://www.youtube.com/watch?v=47BLJ3EPNAw).
+This project is part of the "Bootcamp Jago Golang - Code With Umam" course on [CodeWithUmam - Course Online](https://docs.kodingworks.io/s/820d006c-a994-4487-b993-bc3b4171a35d) and [CodeWithUmam - Youtube](https://www.youtube.com/watch?v=5rJ5g8knuRU).
 
-This repo is submission for Modul 02 Task on Week 02 [CodeWithUmam - Course Task #02](https://docs.kodingworks.io/s/a378a9fe-c0e0-4fa1-a896-43ae347a7b61#h-task-session-2).
+This repo is submission for Modul 03 Task on Week 03 [CodeWithUmam - Course Task #03](https://docs.kodingworks.io/s/820d006c-a994-4487-b993-bc3b4171a35d#h-task-session-3).
 
 ## Architecture
 
@@ -60,6 +60,24 @@ CREATE TABLE products (
     price DECIMAL(10, 2),
     category_id INTEGER REFERENCES categories(id)
 );
+
+CREATE TABLE transactions (
+    id SERIAL PRIMARY KEY,
+    uuid VARCHAR(255) UNIQUE NOT NULL,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    purchased_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE transaction_details (
+    id SERIAL PRIMARY KEY,
+    transaction_id INTEGER REFERENCES transactions(id),
+    product_id INTEGER REFERENCES products(id),
+    name VARCHAR(255) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    quantity INTEGER NOT NULL,
+    subtotal DECIMAL(10, 2) NOT NULL,
+    purchased_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 ```
 
 ### Running the Application
@@ -112,6 +130,17 @@ http://localhost:6969
 | GET | `/products/{uuid}` | Get a specific product |
 | PUT | `/products/{uuid}` | Update a product |
 | DELETE | `/products/{uuid}` | Delete a product |
+
+### Checkout
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/checkouts` | Create a checkout transaction |
+
+### Reports
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/reports` | Get report by date range (query params: start_date, end_date) |
+| GET | `/reports/hari-ini` | Get today's report |
 
 ## API Usage with cURL
 
@@ -380,6 +409,110 @@ Not Found
 
 ---
 
+## Checkout Endpoints
+
+### 12. Create a Checkout Transaction
+Create a new checkout transaction with multiple products.
+
+```bash
+curl -X POST http://localhost:6969/checkouts \
+  -H "Content-Type: application/json" \
+  -d '{
+    "items": [
+      {
+        "id": "660e8400-e29b-41d4-a716-446655440000",
+        "quantity": 2
+      },
+      {
+        "id": "770e8400-e29b-41d4-a716-446655440001",
+        "quantity": 1
+      }
+    ]
+  }'
+```
+
+**Response:**
+```json
+{
+  "id": "880e8400-e29b-41d4-a716-446655440000",
+  "date": "2026-02-08T10:30:00Z",
+  "total_amount": 2999.97,
+  "items": [
+    {
+      "product_id": "660e8400-e29b-41d4-a716-446655440000",
+      "product_name": "iPhone 15",
+      "quantity": 2,
+      "unit_price": 999.99,
+      "total_price": 1999.98
+    },
+    {
+      "product_id": "770e8400-e29b-41d4-a716-446655440001",
+      "product_name": "MacBook Pro",
+      "quantity": 1,
+      "unit_price": 999.99,
+      "total_price": 999.99
+    }
+  ]
+}
+```
+
+**Error Response (No Products Found):**
+```
+No Products Found
+```
+
+---
+
+## Report Endpoints
+
+### 13. Get Today's Report
+Retrieve today's sales report including total revenue, transaction count, and most purchased item.
+
+```bash
+curl -X GET http://localhost:6969/reports/hari-ini
+```
+
+**Response:**
+```json
+{
+  "total_revenue": 15999.95,
+  "total_transaksi": 8,
+  "produk_terlaris": {
+    "id": "660e8400-e29b-41d4-a716-446655440000",
+    "nama": "iPhone 15",
+    "qty_terjual": 25
+  }
+}
+```
+
+---
+
+### 14. Get Report by Date Range
+Retrieve sales report for a specific date range.
+
+```bash
+curl -X GET "http://localhost:6969/reports?start_date=2026-02-01&end_date=2026-02-08"
+```
+
+**Query Parameters:**
+- `start_date`: Start date in YYYY-MM-DD format (optional)
+- `end_date`: End date in YYYY-MM-DD format (optional)
+
+**Response:**
+```json
+{
+  "total_revenue": 45999.85,
+  "total_transaksi": 23,
+  "produk_terlaris": {
+    "id": "660e8400-e29b-41d4-a716-446655440000",
+    "nama": "iPhone 15",
+    "qty_terjual": 67
+  }
+}
+```
+
+---
+
 ## Data Structures
 
 ### Category Response
@@ -424,12 +557,59 @@ Not Found
 }
 ```
 
+### Checkout Request (POST)
+```json
+{
+  "items": [
+    {
+      "id": "string (required, product UUID)",
+      "quantity": "integer (required)"
+    }
+  ]
+}
+```
+
+### Checkout Response
+```json
+{
+  "id": "string (UUID v4, auto-generated)",
+  "date": "string (ISO 8601 timestamp)",
+  "total_amount": "float",
+  "items": [
+    {
+      "product_id": "string (UUID)",
+      "product_name": "string",
+      "quantity": "integer",
+      "unit_price": "float",
+      "total_price": "float"
+    }
+  ]
+}
+```
+
+### Report Response
+```json
+{
+  "total_revenue": "float",
+  "total_transaksi": "integer",
+  "produk_terlaris": {
+    "id": "string (UUID)",
+    "nama": "string",
+    "qty_terjual": "integer"
+  }
+}
+```
+
 ## Notes
 - The application uses PostgreSQL for data persistence
-- UUIDs are automatically generated using UUID v4 format for both categories and products
+- UUIDs are automatically generated using UUID v4 format for categories, products, and transactions
 - The `id` field in responses is the UUID (string), not the database integer ID
 - All responses are in JSON format
 - Product prices are stored with 2 decimal precision
 - Products can optionally be associated with a category using `category_id` (UUID string) in requests
 - When fetching products, the full category details are included in the nested `category` object if associated
 - Response arrays are returned directly (not wrapped in a data object)
+- Checkout transactions automatically update product stock quantities
+- Checkout transactions calculate total amounts based on current product prices
+- Reports aggregate transaction data and identify the most purchased products
+- Date range queries in reports use YYYY-MM-DD format
