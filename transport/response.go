@@ -24,14 +24,17 @@ type CategoryItemResponse struct {
 
 // CheckoutResponse represents the response for a checkout operation.
 type CheckoutResponse struct {
+	ID          string                 `json:"id"`
+	Date        string                 `json:"date"`
 	TotalAmount float64                `json:"total_amount"`
 	Items       []CheckoutItemResponse `json:"items"`
 }
 
 // CheckoutItemResponse represents an item in the checkout response.
 type CheckoutItemResponse struct {
-	ProductID  string  `json:"product_id"`
-	Quantity   int64   `json:"quantity"`
-	UnitPrice  float64 `json:"unit_price"`
-	TotalPrice float64 `json:"total_price"`
+	ProductID   string  `json:"product_id"`
+	ProductName string  `json:"product_name"`
+	Quantity    int64   `json:"quantity"`
+	UnitPrice   float64 `json:"unit_price"`
+	TotalPrice  float64 `json:"total_price"`
 }

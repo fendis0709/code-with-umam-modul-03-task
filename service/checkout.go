@@ -21,22 +21,22 @@ func (s *CheckoutService) CreateCheckout(ctx context.Context, req transport.Chec
 		return transport.CheckoutResponse{}, err
 	}
 
-	var totalAmount float64
-	totalAmount = transaction.TotalAmount
-
 	var itemDetails []transport.CheckoutItemResponse
 	for _, detail := range transaction.Details {
 		itemResp := transport.CheckoutItemResponse{
-			ProductID:  detail.ProductUUID,
-			Quantity:   detail.Quantity,
-			UnitPrice:  detail.Price,
-			TotalPrice: detail.SubTotal,
+			ProductID:   detail.ProductUUID,
+			ProductName: detail.ProductName,
+			Quantity:    detail.Quantity,
+			UnitPrice:   detail.Price,
+			TotalPrice:  detail.SubTotal,
 		}
 		itemDetails = append(itemDetails, itemResp)
 	}
 
 	checkout := transport.CheckoutResponse{
-		TotalAmount: totalAmount,
+		ID:          transaction.UUID,
+		Date:        transaction.PurchasedAt.Format("2006-01-02"),
+		TotalAmount: transaction.TotalAmount,
 		Items:       itemDetails,
 	}
 

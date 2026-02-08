@@ -116,6 +116,7 @@ func (r *CheckoutRepository) CreateCheckoutTransaction(ctx context.Context, req 
 		transactionDetails = append(transactionDetails, model.TransactionDetail{
 			ProductID:   product.ID,
 			ProductUUID: product.UUID,
+			ProductName: product.Name,
 			Price:       price,
 			Quantity:    itemQty,
 			SubTotal:    subTotal,
@@ -127,7 +128,7 @@ func (r *CheckoutRepository) CreateCheckoutTransaction(ctx context.Context, req 
 	var currentTime time.Time
 	transactionUUID = helper.GenerateUUID()
 	currentTime = time.Now()
-	query = "INSERT INTO transactions (uuid, total_amount, transaction_at) VALUES ($1, $2, $3) RETURNING id"
+	query = "INSERT INTO transactions (uuid, total_amount, purchased_at) VALUES ($1, $2, $3) RETURNING id"
 	err = tx.QueryRowContext(ctx, query, transactionUUID, totalAmount, currentTime).Scan(&transactionID)
 	if err != nil {
 		fmt.Print("Failed to insert transaction: ", err)
@@ -136,8 +137,8 @@ func (r *CheckoutRepository) CreateCheckoutTransaction(ctx context.Context, req 
 
 	for i, detail := range transactionDetails {
 		var trxDetailID int64
-		query = "INSERT INTO transaction_details (transaction_id, product_id, price, quantity, sub_total) VALUES ($1, $2, $3, $4, $5) RETURNING id"
-		err := tx.QueryRowContext(ctx, query, transactionID, detail.ProductID, detail.Price, detail.Quantity, detail.SubTotal).Scan(&trxDetailID)
+		query = "INSERT INTO transaction_details (transaction_id, product_id, name, price, quantity, subtotal, purchased_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id"
+		err := tx.QueryRowContext(ctx, query, transactionID, detail.ProductID, detail.ProductName, detail.Price, detail.Quantity, detail.SubTotal, currentTime).Scan(&trxDetailID)
 		if err != nil {
 			fmt.Print("Failed to insert transaction detail: ", err)
 			return nil, err
@@ -154,11 +155,11 @@ func (r *CheckoutRepository) CreateCheckoutTransaction(ctx context.Context, req 
 
 	var transaction model.Transaction
 	transaction = model.Transaction{
-		ID:            transactionID,
-		UUID:          transactionUUID,
-		TotalAmount:   totalAmount,
-		TransactionAt: currentTime,
-		Details:       transactionDetails,
+		ID:          transactionID,
+		UUID:        transactionUUID,
+		TotalAmount: totalAmount,
+		PurchasedAt: currentTime,
+		Details:     transactionDetails,
 	}
 
 	return &transaction, nil
